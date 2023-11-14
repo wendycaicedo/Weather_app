@@ -1,7 +1,9 @@
 from flask import Flask,render_template
 import requests
 from dotenv import load_dotenv, dotenv_values
+
 config=dotenv_values('.env')
+
 app = Flask(__name__)
 
 def get_weather_data(city):
@@ -10,14 +12,24 @@ def get_weather_data(city):
     r= requests.get(url).json()
     print(r)
     return r
-@app.route('/Nohe')
-def Nohe():
-    get_weather_data(guayaquil)
-    return get_weather_data('guayaquil')
+@app.route('/Prueba')
+def Prueba():
+    Clima= get_weather_data('guayaquil')
+    temperatura=str (Clima['main']['temp'])
+    descripcion= str (Clima['weather'][0]['description'])
+    icono=str (Clima['weather'][0]['icon'])
+    r_json={
+        'cuidad':'guayaquil',
+        'temperatura':temperatura,
+        'descripcion': descripcion,
+        'icono':icono,
+        }
+    return render_template('weather.html',Clima=r_json)
+
 
 @app.route('/about')
 def about():
-    return render_template ("about.html")
+    return render_template ("weather.html")
 
 @app.route('/clima')
 def clima():
